@@ -7,10 +7,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pylint
+    
+    - name: Check for Python files
+      id: check_py_files
+      run: |
+        if ! git ls-files '*.py' | grep -q '.py'; then
+          echo "No Python files to lint."
+          exit 0
+        fi
+    
     - name: Analysing the code with pylint
       run: |
-        pylint
+        pylint $(git ls-files '*.py')
